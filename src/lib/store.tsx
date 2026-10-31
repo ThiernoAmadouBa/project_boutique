@@ -145,12 +145,18 @@ export function StoreProvider({ children }: { children: ReactNode }) {
             if (migrationError) throw new Error(`Migration initiale impossible : ${migrationError.message}`);
           }
         } else {
-          const { data: products, error: productsError } = await client.rpc("get_public_products");
-          if (productsError) throw new Error(`Chargement du catalogue public impossible : ${productsError.message}`);
-          const publicProducts = Array.isArray(products) ? products : [];
+          const response = await fetch("/api/catalog", { cache: "no-store" });
+          if (!response.ok) {
+            const result = await response.json().catch(() => null) as { error?: string } | null;
+            throw new Error(result?.error ?? `Chargement du catalogue public impossible (HTTP ${response.status}).`);
+          }
+          const products: unknown = await response.json();
+          if (!Array.isArray(products)) {
+            throw new Error("Le catalogue public reçu est dans un format invalide.");
+          }
           nextDb = {
             ...EMPTY,
-            products: publicProducts.map((product) => ({
+            products: products.map((product) => ({
               ...product,
               buyPrice: 0,
               stock: Number(product.stock) || 0,
