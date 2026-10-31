@@ -47,6 +47,7 @@ Les données sont partagées entre les navigateurs via Supabase. Les produits pu
 ## Important
 - Produits, stocks, clients, factures et mouvements sont partagés via Supabase ; la connexion gérant utilise Supabase Auth.
 - Le premier compte autorisé est le gérant ajouté à `shop_admins`. L'ajout d'autres comptes nécessite de les créer dans Supabase Auth et de les autoriser en base.
+- L'espace gérant est réservé aux comptes autorisés dans `shop_admins` ; les autres visiteurs sont renvoyés vers la connexion et ne peuvent pas lire ni modifier les données privées. Les tentatives de connexion sont soumises aux limites de débit de Supabase Auth. Laissez les inscriptions publiques désactivées et ne partagez jamais les identifiants du gérant.
 - Si Supabase ne contient encore aucune donnée, le premier accès gérant importe la copie locale de ce navigateur. Les appareils des autres utilisateurs ne sont pas importés automatiquement.
 - Le bouton de réinitialisation de démonstration remplace les données par des exemples ; « Tout supprimer » vide la boutique.
 - « Excel » exporte un CSV ; le PDF de facture/devis intègre le logo de la boutique et un QR code pointant vers son adresse publique.

@@ -43,6 +43,9 @@ export async function loginUser(email: string, password: string): Promise<AuthSe
   const { data, error } = await client.auth.signInWithPassword({ email: email.trim().toLowerCase(), password });
   if (error) {
     if (error.message === "Invalid login credentials") return null;
+    if (error.status === 429 || error.code?.includes("rate_limit")) {
+      throw new Error("Trop de tentatives de connexion. Réessayez dans quelques minutes.");
+    }
     throw new Error(`Connexion impossible : ${error.message}`);
   }
   if (!data.user.email) {

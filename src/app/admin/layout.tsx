@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { ReactNode, useEffect, useState } from "react";
-import { Boxes, ClipboardCheck, ExternalLink, FileText, History, LayoutDashboard, LogOut, Package, Settings, Users } from "lucide-react";
+import { Boxes, ClipboardCheck, FileText, History, LayoutDashboard, LogOut, Package, Settings, Store, Users } from "lucide-react";
 import { shop } from "@/config/shop";
 import { restoreAuthSession, signOut } from "@/lib/auth";
 import type { AuthSession } from "@/lib/auth";
@@ -93,8 +93,8 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
           ))}
         </nav>
         <div className="space-y-1">
-          <Link href="/" target="_blank" className="flex items-center gap-3 rounded-xl px-3.5 py-2.5 text-sm font-semibold text-blue-100/75 transition hover:bg-white/10 hover:text-white">
-            <ExternalLink size={18} /> Voir la vitrine
+          <Link href="/" className="flex items-center gap-3 rounded-xl px-3.5 py-2.5 text-sm font-semibold text-blue-100/75 transition hover:bg-white/10 hover:text-white">
+            <Store size={18} /> Voir la vitrine
           </Link>
           <button onClick={logout} className="flex w-full items-center gap-3 rounded-xl px-3.5 py-2.5 text-sm font-semibold text-rose-200 transition hover:bg-rose-400/10 hover:text-rose-100">
             <LogOut size={18} /> Déconnexion
@@ -111,8 +111,8 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
           </span>
         </div>
         <div className="flex items-center gap-1">
-          <Link href="/" target="_blank" className="rounded-xl p-2 text-slate-500 hover:bg-slate-100" aria-label="Vitrine">
-            <ExternalLink size={18} />
+          <Link href="/" className="rounded-xl p-2 text-slate-500 hover:bg-slate-100" aria-label="Voir la vitrine">
+            <Store size={18} />
           </Link>
           <button onClick={logout} className="rounded-xl p-2 text-rose-600 hover:bg-rose-50" aria-label="Déconnexion">
             <LogOut size={18} />

@@ -111,6 +111,9 @@ export default function ConnexionPage() {
           <Logo size={72} />
           <h1 className="mt-4 text-xl font-extrabold text-slate-900">Espace gérant</h1>
           <p className="text-sm text-slate-500">{shop.name}</p>
+          <p className="mt-2 text-xs leading-relaxed text-slate-500">
+            Accès réservé au gérant autorisé. Les clients peuvent consulter la vitrine sans se connecter.
+          </p>
         </div>
         {!recovering && (
           <>

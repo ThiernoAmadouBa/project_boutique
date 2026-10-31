@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { ArrowRight, Clock, Headphones, Laptop, Mail, MapPin, MessageCircle, Minus, PackageSearch, Phone, Plus, Search, Smartphone, Sparkles } from "lucide-react";
+import { ArrowRight, Clock, Headphones, House, Laptop, Mail, MapPin, MessageCircle, Minus, PackageSearch, Phone, Plus, Search, ShieldCheck, Smartphone, Sparkles } from "lucide-react";
 import { useStore } from "@/lib/store";
 import { shop } from "@/config/shop";
 import { cn, money, telLink, waLink } from "@/lib/utils";
@@ -144,9 +144,10 @@ export function Storefront() {
               <span className="hidden text-[10px] font-semibold uppercase tracking-[0.16em] text-slate-500 sm:block">Technologie & accessoires</span>
             </span>
           </a>
-          <nav aria-label="Navigation principale" className="order-3 flex w-full items-center justify-center gap-2 border-t border-slate-100 pt-2 text-xs font-semibold text-slate-600 md:order-none md:w-auto md:gap-3 md:border-0 md:pt-0 md:text-sm">
-            <a href="#produits" className="rounded-full px-4 py-2 transition hover:bg-brand-50 hover:text-brand-700">Produits</a>
-            <a href="#contact" className="rounded-full px-4 py-2 transition hover:bg-brand-50 hover:text-brand-700">Contact</a>
+          <nav aria-label="Navigation principale" className="order-3 flex w-full flex-wrap items-center justify-center gap-1 border-t border-slate-100 pt-2 text-xs font-semibold text-slate-600 md:order-none md:w-auto md:gap-2 md:border-0 md:pt-0 md:text-sm">
+            <a href="#top" className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-2 transition hover:bg-brand-50 hover:text-brand-700 sm:px-3"><House size={14} /> Accueil</a>
+            <a href="#produits" className="rounded-full px-2.5 py-2 transition hover:bg-brand-50 hover:text-brand-700 sm:px-3">Produits</a>
+            <a href="#contact" className="rounded-full px-2.5 py-2 transition hover:bg-brand-50 hover:text-brand-700 sm:px-3">Contact</a>
           </nav>
           <div className="flex items-center gap-2">
             <a href={telLink} className="btn-soft !rounded-full !px-3 !py-2 sm:!px-4">
@@ -365,8 +366,11 @@ export function Storefront() {
         </div>
       </section>
 
-      <footer className="bg-slate-900 py-6 text-center text-sm text-slate-400">
-        © {new Date().getFullYear()} {shop.name} — Tous droits réservés
+      <footer className="bg-slate-900 px-4 py-6 text-center text-sm text-slate-400">
+        <p>© {new Date().getFullYear()} {shop.name} — Tous droits réservés</p>
+        <a href="/connexion" className="mt-3 inline-flex items-center gap-1.5 text-xs text-slate-500 transition hover:text-slate-300">
+          <ShieldCheck size={13} /> Accès gérant
+        </a>
       </footer>
 
       {/* Bouton WhatsApp flottant */}
