@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import { motion } from "framer-motion";
-import { FileText, Plus, Search } from "lucide-react";
+import { CalendarDays, FileText, Plus, Search } from "lucide-react";
 import { useStore } from "@/lib/store";
 import { cn, fmtDate, invoiceTotals, money, statusMeta } from "@/lib/utils";
 import { EmptyState, Loading, PageHeader, StatCard } from "@/components/ui";
@@ -14,17 +14,36 @@ export default function FacturesPage() {
   const { db, ready } = useStore();
   const [q, setQ] = useState("");
   const [filter, setFilter] = useState<Filter>("toutes");
+  const [month, setMonth] = useState("");
 
   const rows = useMemo(() => {
     const t = q.trim().toLowerCase();
     return db.invoices
       .map((i) => ({ inv: i, t: invoiceTotals(i) }))
       .filter(({ inv }) => {
+        if (month) {
+          const date = new Date(inv.date);
+          if (Number.isNaN(date.getTime())) return false;
+          const invoiceMonth = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}`;
+          if (invoiceMonth !== month) return false;
+        }
         if (filter === "factures" && inv.type !== "facture") return false;
         if (filter === "devis" && inv.type !== "devis") return false;
         return !t || `${inv.number} ${inv.customerName}`.toLowerCase().includes(t);
       });
-  }, [db.invoices, q, filter]);
+  }, [db.invoices, q, filter, month]);
+
+  const periodInvoices = useMemo(
+    () =>
+      db.invoices.filter((invoice) => {
+        if (!month) return true;
+        const date = new Date(invoice.date);
+        if (Number.isNaN(date.getTime())) return false;
+        const invoiceMonth = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}`;
+        return invoiceMonth === month;
+      }),
+    [db.invoices, month]
+  );
 
   if (!ready) return <Loading />;
 
@@ -47,8 +66,8 @@ export default function FacturesPage() {
       />
 
       <div className="mb-5 grid grid-cols-2 gap-3">
-        <StatCard label="Factures" value={String(db.invoices.filter((i) => i.type === "facture").length)} icon={FileText} />
-        <StatCard label="Total des ventes" value={money(db.invoices.filter((i) => i.type === "facture").reduce((sum, i) => sum + invoiceTotals(i).total, 0))} icon={FileText} />
+        <StatCard label="Factures" value={String(periodInvoices.filter((i) => i.type === "facture").length)} icon={FileText} />
+        <StatCard label="Total des ventes" value={money(periodInvoices.filter((i) => i.type === "facture").reduce((sum, i) => sum + invoiceTotals(i).total, 0))} icon={FileText} />
       </div>
 
       <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center">
@@ -56,6 +75,16 @@ export default function FacturesPage() {
           <Search size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
           <input className="input !pl-10" placeholder="Numéro ou nom du client…" value={q} onChange={(e) => setQ(e.target.value)} />
         </div>
+        <label htmlFor="invoice-month" className="flex shrink-0 items-center gap-2 text-sm font-semibold text-slate-600">
+          <CalendarDays size={16} /> Mois
+          <input
+            id="invoice-month"
+            type="month"
+            className="input w-full sm:w-auto"
+            value={month}
+            onChange={(event) => setMonth(event.target.value)}
+          />
+        </label>
         <div className="no-scrollbar flex gap-1.5 overflow-x-auto">
           {filters.map((f) => (
             <button key={f.k} onClick={() => setFilter(f.k)} className={cn("shrink-0 rounded-full px-4 py-2 text-sm font-semibold transition", filter === f.k ? "bg-brand-600 text-white shadow" : "bg-white text-slate-600 ring-1 ring-slate-200")}>

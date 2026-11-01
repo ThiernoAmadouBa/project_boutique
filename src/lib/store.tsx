@@ -32,6 +32,7 @@ interface Ctx {
   createInvoice: (i: InvoiceInput) => string;
   convertQuote: (id: string) => void;
   deleteInvoice: (id: string) => void;
+  clearAllHistory: () => void;
   resetDemo: () => void;
   clearAll: () => void;
 }
@@ -331,6 +332,10 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     });
   }, []);
 
+  const clearAllHistory = useCallback(() => {
+    setDb((prev) => ({ ...prev, movements: [], invoices: [] }));
+  }, []);
+
   const resetDemo = useCallback(() => setDb(makeSeed()), []);
   const clearAll = useCallback(() => setDb({ ...EMPTY }), []);
 
@@ -347,10 +352,11 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       createInvoice,
       convertQuote,
       deleteInvoice,
+      clearAllHistory,
       resetDemo,
       clearAll,
     }),
-    [db, ready, loadError, saveProduct, deleteProduct, moveStock, applyInventory, saveCustomer, createInvoice, convertQuote, deleteInvoice, resetDemo, clearAll]
+    [db, ready, loadError, saveProduct, deleteProduct, moveStock, applyInventory, saveCustomer, createInvoice, convertQuote, deleteInvoice, clearAllHistory, resetDemo, clearAll]
   );
 
   return (

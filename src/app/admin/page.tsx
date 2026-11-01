@@ -58,7 +58,7 @@ function getRange(period: Period) {
 }
 
 export default function DashboardPage() {
-  const { db, ready, clearAll } = useStore();
+  const { db, ready, clearAll, clearAllHistory } = useStore();
   const toast = useToast();
   const [period, setPeriod] = useState<Period>("month");
 
@@ -138,6 +138,24 @@ export default function DashboardPage() {
             <Link href="/admin/factures/nouvelle" className="btn-primary">
               <Receipt size={16} /> Nouvelle facture
             </Link>
+            {(db.invoices.length > 0 || db.movements.length > 0) && (
+              <button
+                type="button"
+                onClick={() => {
+                  if (
+                    confirm(
+                      "Effacer définitivement toutes les factures, tous les devis et tous les mouvements ? Les produits, stocks et clients seront conservés."
+                    )
+                  ) {
+                    clearAllHistory();
+                    toast("Historique des ventes et indicateurs du tableau de bord réinitialisés", "info");
+                  }
+                }}
+                className="btn-ghost text-rose-600 hover:bg-rose-50"
+              >
+                <Trash2 size={16} /> Réinitialiser les ventes
+              </button>
+            )}
           </>
         }
       />
@@ -272,7 +290,17 @@ export default function DashboardPage() {
 
       {!db.demo && db.products.length === 0 && (
         <div className="no-print mt-5 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-dashed border-slate-200 bg-white p-4 text-sm text-slate-500">
-          <span>Commencez par ajouter vos produits : ils apparaîtront sur votre vitrine.</span>
+          <div>
+            <p>Commencez par ajouter vos produits : ils apparaîtront sur votre vitrine.</p>
+            {db.invoices.some((invoice) => invoice.type === "facture") && (
+              <p className="mt-1 text-xs text-slate-500">
+                Les chiffres restent affichés car ils proviennent des factures enregistrées, même après la suppression des produits.{" "}
+                <Link href="/admin/historique" className="font-semibold text-brand-700 hover:underline">
+                  Gérer l&apos;historique des ventes
+                </Link>
+              </p>
+            )}
+          </div>
           <Link href="/admin/produits" className="btn-primary">
             Ajouter un produit
           </Link>
